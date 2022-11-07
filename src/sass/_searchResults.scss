@@ -40,3 +40,13 @@
     color: $color-grey-dark-2;
   }
 }
+
+.pagination__pages {
+  display: inline-table;
+  color: $color-primary;
+  font-size: 1.4rem;
+  font-weight: 600;
+  width: max-content;
+  transform: translateY(5px);
+  translate: 100%;
+}

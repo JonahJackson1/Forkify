@@ -15,39 +15,34 @@ export class PaginationView extends View {
   }
 
   _generateMarkup() {
+    debugger;
     const currentPage = this._data.page;
     const numPages = Math.ceil(
       this._data.results.length / this._data.resultsPerPage
     );
-
+    if (numPages === 0)
+      throw Error(
+        'No recipes found for your query, please check your search and try again.'
+      );
     // prettier-ignore
-    const markupBtnNext = `
-    <button data-goto="${currentPage + 1}" class="btn--inline pagination__btn--next">
+    const markup = `
+    <button data-goto="${currentPage + 1}" class="btn--inline pagination__btn--next ${currentPage === numPages && numPages > 1 ? 'hidden' : ''}">
       <span>Page ${currentPage + 1}</span>
       <svg class="search__icon">
         <use href="${icons}#icon-arrow-right"></use>
       </svg>
-    </button>`;
-    // prettier-ignore
-    const markupBtnPrev = `
-    <button data-goto="${currentPage - 1}"class="btn--inline pagination__btn--prev">
+    </button>
+    <div class="pagination__pages">${numPages} pages</div>
+    <button data-goto="${currentPage - 1}"class="btn--inline pagination__btn--prev ${currentPage === 1 && numPages > 1 ? 'hidden' : ''}">
       <svg class="search__icon">
         <use href="${icons}#icon-arrow-left"></use>
       </svg>
       <span>Page ${currentPage - 1}</span>
-    </button>`;
+    </button>
+    `;
 
-    // Page 1, are other pages
-    if (currentPage === 1 && numPages > 1) return markupBtnNext;
-
-    // Last page
-    if (currentPage === numPages && numPages > 1) return markupBtnPrev;
-
-    // Other page
-    if (currentPage < numPages) return markupBtnPrev + markupBtnNext;
-
-    // Page 1, no other pages
-    return '';
+    if (numPages <= 1) return '';
+    return markup;
   }
 }
 export default new PaginationView();
