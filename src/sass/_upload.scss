@@ -6,6 +6,7 @@
   width: 100rem;
   background-color: white;
   border-radius: 9px;
+  max-height: 538.5px;
 
   padding: 5rem 6rem;
   box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.25);
@@ -46,7 +47,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem 6rem;
-
   &__column {
     display: grid;
     grid-template-columns: 1fr 2.8fr;
@@ -62,7 +62,7 @@
     & input {
       font-size: 1.5rem;
       padding: 0.8rem 1rem;
-      border: 1px solid #ddd;
+      border: 1px solid rgb(170, 170, 170);
       border-radius: 0.5rem;
       transition: all 0.2s;
 
@@ -96,4 +96,52 @@
     grid-column: 1 / -1;
     justify-self: center;
   }
+}
+
+.upload__ingredients--list {
+  display: grid;
+  overflow-y: scroll;
+  grid-template-columns: 14rem repeat(2, 10rem);
+  height: 538.5px - 162.5px;
+  color: #615551;
+  column-gap: 2rem;
+  row-gap: 1rem;
+  align-items: center;
+
+  & label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: Nunito Sans, sans-serif;
+  }
+  & button {
+    border-radius: 42%;
+    height: 2.5rem;
+    border: none;
+    font-weight: 600;
+    background-image: none;
+    background-color: none;
+  }
+  .btn__ingredient {
+    align-self: center;
+  }
+  #btn__list--close {
+    width: 10%;
+    font-size: 80%;
+    margin-left: 5%;
+  }
+}
+
+.fullHide {
+  display: none;
+}
+
+.btn__recipe-data--list {
+  margin-left: 30.8%;
+  border: none;
+  color: #615551;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: Nunito Sans, sans-serif;
+  border-radius: 42%;
+  padding: 1%;
 }

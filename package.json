@@ -18,13 +18,15 @@
   },
   "homepage": "https://github.com/UFLIPTraining/jonah-udemy-javascript-zero-to-expert#readme",
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.7.0",
-    "parcel": "^2.7.0"
+    "@parcel/transformer-sass": "^2.8.0",
+    "@types/core-js": "^2.5.5",
+    "@types/regenerator-runtime": "^0.13.1",
+    "parcel": "^2.8.0"
   },
   "dependencies": {
     "core-js": "^3.26.0",
     "fractional": "^1.0.0",
     "regenerator-runtime": "^0.13.10",
-    "sass": "^1.56.0"
+    "sass": "^1.56.1"
   }
 }

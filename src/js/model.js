@@ -78,6 +78,7 @@ export const updateServings = function (newServings) {
     ingredient.quantity = (ingredient.quantity * newServings) / state.recipe.servings;
   });
   state.recipe.servings = newServings;
+  console.log(state);
 };
 
 const persistBookmarks = function () {
@@ -99,19 +100,7 @@ const clearBookmarks = function () {
 
 export const uploadRecipe = async function (newRecipe) {
   try {
-    const ingredients = Object.entries(newRecipe)
-      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
-      .map(ing => {
-        const ingArray = ing[1].split(',').map(el => el.trim());
-        if (ingArray.length !== 3)
-          throw new Error(
-            'Wrong ingredient format... Please use the correct format!!'
-          );
-
-        const [quantity, unit, description] = ingArray;
-
-        return { quantity: quantity ? +quantity : null, unit, description };
-      });
+    console.log(newRecipe);
     const recipe = {
       title: newRecipe.title,
       source_url: newRecipe.sourceUrl,
@@ -123,7 +112,9 @@ export const uploadRecipe = async function (newRecipe) {
     };
     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
     state.recipe = createRecipeObject(data);
-    addBookmark(state.recipe);
+    // addBookmark(state.recipe);
+    console.log(state);
+    console.log(recipe);
   } catch (err) {
     throw err.message;
   }

@@ -261,8 +261,13 @@
     <div class="add-recipe-window hidden">
       <button class="btn--close-modal">&times;</button>
       <form class="upload">
-        <div class="upload__column">
-          <h3 class="upload__heading">Recipe data</h3>
+        <div class="upload__column recipe__data">
+          <h3 class="upload__heading">
+            Recipe data
+            <button type="button" class="btn__recipe-data--list">
+              INGREDIENT LIST
+            </button>
+          </h3>
           <label>Title</label>
           <input value="TEST23" required name="title" type="text" />
           <label>URL</label>
@@ -276,49 +281,66 @@
           <label>Servings</label>
           <input value="23" required name="servings" type="number" />
         </div>
+        <!-- Temp data, will contain user's saved ingredients -->
+        <div class="upload__ingredients--list ingredient__list fullHide">
+          <h3 class="upload__heading">
+            List of Ingredients
+            <button type="button" id="btn__list--close">X</button>
+          </h3>
+          <!-- <label>1/4 cup Rice</label>
+          <button type="button" class="btn__ingredient btn__edit">Edit</button>
+          <button type="button" class="btn__ingredient btn__remove">
+            Remove
+          </button>
 
-        <div class="upload__column">
-          <h3 class="upload__heading">Ingredients</h3>
-          <label>Ingredient 1</label>
+          <label>1 tsp Olive Oil</label>
+          <button type="button" class="btn__ingredient btn__edit">Edit</button>
+          <button type="button" class="btn__ingredient btn__remove">
+            Remove
+          </button>
+
+          <label>1 tbsp Salt </label>
+          <button type="button" class="btn__ingredient btn__edit">Edit</button>
+          <button type="button" class="btn__ingredient btn__remove">
+            Remove
+          </button>
+
+          <label>1 tsp Super Duper Extremely Extra Virgin Olive Oil</label>
+          <button type="button" class="btn__ingredient btn__edit">Edit</button>
+          <button type="button" class="btn__ingredient btn__remove">
+            Remove
+          </button> -->
+        </div>
+
+        <div class="upload__column add__ingredient">
+          <h3 class="upload__heading">Add Ingredients</h3>
+          <label class="upload__types">Ingredient</label>
           <input
-            value="0.5,kg,Rice"
+            value="Rice"
             type="text"
             required
-            name="ingredient-1"
-            placeholder="Format: 'Quantity,Unit,Description'"
+            name="ingredient"
+            placeholder="Rice, Pasta, Marinara, etc"
           />
-          <label>Ingredient 2</label>
+          <label class="upload__types">Quantity</label>
           <input
-            value="1,,Avocado"
-            type="text"
-            name="ingredient-2"
-            placeholder="Format: 'Quantity,Unit,Description'"
+            value="1"
+            type="number"
+            required
+            name="quantity"
+            placeholder="1, 0.33, 2.66, etc"
           />
-          <label>Ingredient 3</label>
+          <label class="upload__types">Measurement</label>
           <input
-            value=",,salt"
+            value="Cup"
             type="text"
-            name="ingredient-3"
-            placeholder="Format: 'Quantity,Unit,Description'"
+            required
+            name="measurement"
+            placeholder="Cup, Tsp, Tbsp, etc"
           />
-          <label>Ingredient 4</label>
-          <input
-            type="text"
-            name="ingredient-4"
-            placeholder="Format: 'Quantity,Unit,Description'"
-          />
-          <label>Ingredient 5</label>
-          <input
-            type="text"
-            name="ingredient-5"
-            placeholder="Format: 'Quantity,Unit,Description'"
-          />
-          <label>Ingredient 6</label>
-          <input
-            type="text"
-            name="ingredient-6"
-            placeholder="Format: 'Quantity,Unit,Description'"
-          />
+          <button type="button" class="btn add__ingredient--btn">
+            Add Ingredient
+          </button>
         </div>
 
         <button class="btn upload__btn">

@@ -15,7 +15,6 @@ export class PaginationView extends View {
   }
 
   _generateMarkup() {
-    debugger;
     const currentPage = this._data.page;
     const numPages = Math.ceil(
       this._data.results.length / this._data.resultsPerPage
