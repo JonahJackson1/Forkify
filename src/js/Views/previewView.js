@@ -5,9 +5,6 @@ class PreviewView extends View {
   _parentElement = '';
 
   _generateMarkup() {
-    return this._data.map(this._generateMarkupPreview).join('');
-  }
-  _generateMarkup() {
     const id = window.location.hash.slice(1);
 
     return `

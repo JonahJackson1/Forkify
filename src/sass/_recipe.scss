@@ -177,3 +177,21 @@
     font-weight: 700;
   }
 }
+.recipe__user--btns {
+  display: flex;
+}
+
+.btn--recipe {
+  border-radius: 66%;
+  padding: 1rem;
+  margin: 10%;
+  color: $color-primary;
+  border: none;
+  font-weight: 700;
+  background-image: none;
+  background-color: rgba(192, 190, 190, 0.734);
+}
+
+.shopping--list__add {
+  margin-top: 1.5rem;
+}

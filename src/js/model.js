@@ -1,12 +1,15 @@
-import { async } from 'regenerator-runtime';
-import { KEY } from './config.js';
-import { API_URL } from './config.js';
-import { RESULTS_PER_PAGE } from './config.js';
-import { SEARCH_START_PAGE } from './config.js';
+import {
+  KEY,
+  MODAL_CLOSE_SEC,
+  API_URL,
+  RESULTS_PER_PAGE,
+  SEARCH_START_PAGE,
+} from './config.js';
 import { AJAX } from './helpers.js';
 
 export const state = {
   recipe: {},
+  userIngredients: [],
   search: {
     query: '',
     results: [],
@@ -40,8 +43,6 @@ export const loadRecipe = async function (id) {
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
   } catch (err) {
-    // temp error handling
-    console.error(`${err} 🔥🔥`);
     throw err;
   }
 };
@@ -66,6 +67,7 @@ export const loadSearchResults = async function (query) {
 };
 
 export const getSearchResultsPage = function (page = state.search.page) {
+  if (!state.search.page) return;
   state.search.page = page;
   const start = (page - 1) * state.search.resultsPerPage; // 0;
   const end = page * state.search.resultsPerPage; // 9;
@@ -78,7 +80,6 @@ export const updateServings = function (newServings) {
     ingredient.quantity = (ingredient.quantity * newServings) / state.recipe.servings;
   });
   state.recipe.servings = newServings;
-  console.log(state);
 };
 
 const persistBookmarks = function () {
@@ -97,10 +98,38 @@ export const addBookmark = function (recipe) {
 const clearBookmarks = function () {
   localStorage.clear('bookmarks');
 };
+// clearBookmarks();
+
+const createID = function () {
+  return (Date.now() + '').slice(-10);
+};
+
+export const deleteIngredient = function (id) {
+  state.userIngredients.forEach((ingredient, i) => {
+    if (ingredient.id === id) state.userIngredients.splice(i, 1);
+  });
+};
+
+export const getUserIngredient = function (id) {
+  const index = state.userIngredients.findIndex(el => {
+    if (el.id === id) return el;
+    if (!el.id === id) throw new Error('ID not found');
+  });
+  return state.userIngredients[index];
+};
+
+export const createIngredient = function (newIngredient) {
+  const newIngredientObj = {
+    quantity: newIngredient.ingredientQuantity,
+    unit: newIngredient.ingredientMeasurement,
+    description: newIngredient.ingredientIngredient,
+    id: createID(),
+  };
+  state.userIngredients.push(newIngredientObj);
+};
 
 export const uploadRecipe = async function (newRecipe) {
   try {
-    console.log(newRecipe);
     const recipe = {
       title: newRecipe.title,
       source_url: newRecipe.sourceUrl,
@@ -108,20 +137,38 @@ export const uploadRecipe = async function (newRecipe) {
       publisher: newRecipe.publisher,
       cooking_time: +newRecipe.cookingTime,
       servings: +newRecipe.servings,
-      ingredients,
+      ingredients: state.userIngredients,
     };
+    if (recipe.ingredients.length === 0) {
+      throw new Error('Please check form fields...');
+    }
     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
     state.recipe = createRecipeObject(data);
-    // addBookmark(state.recipe);
-    console.log(state);
-    console.log(recipe);
+    addBookmark(state.recipe);
   } catch (err) {
     throw err.message;
   }
 };
 
-export const deleteBookmark = function (id) {
-  // delete bookmark
+export const checkUserIngredients = () =>
+  state.userIngredients.length > 0 ? true : false;
+
+export const deleteRecipe = async function (hash) {
+  // this actually deletes the recipe
+  try {
+    await fetch(`${API_URL}/${hash}?key=${KEY}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const removeBookmark = function (id) {
+  // removes bookmark
   const index = state.bookmarks.findIndex(el => el.id === id);
   state.bookmarks.splice(index, 1);
 
@@ -133,4 +180,5 @@ export const deleteBookmark = function (id) {
 (() => {
   const storage = localStorage.getItem('bookmarks');
   if (storage) state.bookmarks = JSON.parse(storage);
+  // console.log(storage);
 })();

@@ -1,5 +1,4 @@
 import View from './view.js';
-import icons from 'url:../../img/icons.svg';
 
 export class AddRecipeView extends View {
   _parentElement = document.querySelector('.upload');
@@ -20,7 +19,6 @@ export class AddRecipeView extends View {
     this._overlay.classList.toggle('hidden');
     this._window.classList.toggle('hidden');
   }
-
   _addHandlerShowWindow() {
     this._btnOpen.addEventListener('click', this.toggleWindow.bind(this));
   }
@@ -29,7 +27,6 @@ export class AddRecipeView extends View {
     this._overlay.addEventListener('click', this.toggleWindow.bind(this));
   }
   addHandlerUpload(handler) {
-    // debugger;
     this._parentElement.addEventListener('submit', function (e) {
       e.preventDefault();
       const dataArray = [...new FormData(this)];
