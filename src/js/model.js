@@ -95,6 +95,16 @@ export const addBookmark = function (recipe) {
   persistBookmarks();
 };
 
+export const removeBookmark = function (id) {
+  // removes bookmark from array
+  const index = state.bookmarks.findIndex(el => el.id === id);
+  state.bookmarks.splice(index, 1);
+
+  // Mark current recipe as NOT bookmark
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
+  persistBookmarks();
+};
+
 const clearBookmarks = function () {
   localStorage.clear('bookmarks');
 };
@@ -165,16 +175,6 @@ export const deleteRecipe = async function (hash) {
   } catch (err) {
     throw err;
   }
-};
-
-export const removeBookmark = function (id) {
-  // removes bookmark
-  const index = state.bookmarks.findIndex(el => el.id === id);
-  state.bookmarks.splice(index, 1);
-
-  // Mark current recipe as NOT bookmark
-  if (id === state.recipe.id) state.recipe.bookmarked = false;
-  persistBookmarks();
 };
 
 (() => {

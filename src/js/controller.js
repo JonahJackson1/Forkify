@@ -48,7 +48,7 @@ const controlServings = function (newServings) {
 
 const controlBookmarks = function () {
   // if bookmarks render them to nav
-  if (model.state.bookmarks.length <= 0) return;
+  if (model.state.bookmarks.length < 0) return;
   bookmarksView.render(model.state.bookmarks);
 };
 
@@ -197,7 +197,6 @@ const controlRecipes = async function () {
 
     // updating bookmarks view
     bookmarksView.render(model.state.bookmarks);
-    // console.log(model.state.bookmarks);
 
     // Rendering recipe
     recipeView.render(model.state.recipe);

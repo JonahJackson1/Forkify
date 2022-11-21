@@ -92,7 +92,6 @@ class IngredientView extends View {
       this._parentElement = document.querySelector(
         '.upload__ingredients--list'
       );
-
       return;
     }
 
@@ -108,9 +107,6 @@ class IngredientView extends View {
           </div>
     `;
     this._parentElement.insertAdjacentHTML('beforeend', markup);
-    setTimeout(() => {
-      document.querySelector(`.error--${n}`).remove();
-    }, MODAL_CLOSE_SEC * 1000);
   }
 
   toggleUploadWindows(e, error = null) {
