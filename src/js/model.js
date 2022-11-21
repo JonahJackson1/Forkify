@@ -100,30 +100,30 @@ const clearBookmarks = function () {
 };
 // clearBookmarks();
 
-const createID = function () {
-  return (Date.now() + '').slice(-10);
-};
-
-export const deleteIngredient = function (id) {
-  state.userIngredients.forEach((ingredient, i) => {
-    if (ingredient.id === id) state.userIngredients.splice(i, 1);
+export const deleteIngredient = function (ingredient) {
+  state.userIngredients.forEach((ing, i) => {
+    if (!ingredient === ing) return;
+    state.userIngredients.splice(i, 1);
   });
 };
 
-export const getUserIngredient = function (id) {
+export const getUserIngredient = function (arr) {
+  const newObj = {
+    quantity: +arr[0],
+    unit: arr[1],
+    description: arr[2],
+  };
   const index = state.userIngredients.findIndex(el => {
-    if (el.id === id) return el;
-    if (!el.id === id) throw new Error('ID not found');
+    if (JSON.stringify(el) === JSON.stringify(newObj)) return el;
   });
   return state.userIngredients[index];
 };
 
 export const createIngredient = function (newIngredient) {
   const newIngredientObj = {
-    quantity: newIngredient.ingredientQuantity,
+    quantity: +newIngredient.ingredientQuantity,
     unit: newIngredient.ingredientMeasurement,
     description: newIngredient.ingredientIngredient,
-    id: createID(),
   };
   state.userIngredients.push(newIngredientObj);
 };
@@ -154,7 +154,7 @@ export const checkUserIngredients = () =>
   state.userIngredients.length > 0 ? true : false;
 
 export const deleteRecipe = async function (hash) {
-  // this actually deletes the recipe
+  // this deletes the recipe from API
   try {
     await fetch(`${API_URL}/${hash}?key=${KEY}`, {
       method: 'DELETE',
@@ -180,5 +180,4 @@ export const removeBookmark = function (id) {
 (() => {
   const storage = localStorage.getItem('bookmarks');
   if (storage) state.bookmarks = JSON.parse(storage);
-  // console.log(storage);
 })();

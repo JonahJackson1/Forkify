@@ -7,6 +7,7 @@ import bookmarksView from './Views/bookmarksView.js';
 import addRecipeView from './Views/addRecipeView.js';
 import deleteRecipeView from './Views/deleteRecipeView.js';
 import ingredientView from './Views/ingredientView.js';
+import editRecipeView from './Views/editRecipeView.js';
 import { MODAL_CLOSE_SEC } from './config.js';
 
 // if (module.hot) {
@@ -71,7 +72,6 @@ const controlAddIngredient = function (
 ) {
   try {
     if (error) throw error;
-
     model.createIngredient(newIngredient);
     ingredientView._renderIngredient(
       ingredientView._generateMarkup(model.state.userIngredients.slice(-1))
@@ -82,9 +82,10 @@ const controlAddIngredient = function (
 };
 
 // Edits a selected ingredient from the data list
-const controlEditIngredient = function (id) {
+const controlEditIngredient = function (arr) {
   try {
-    const ingredient = model.getUserIngredient(id);
+    const ingredient = model.getUserIngredient(arr);
+    model.deleteIngredient(ingredient);
     ingredientView.addHandlerEditIngredient(null, true, ingredient);
   } catch (err) {
     ingredientView.renderError(err);
@@ -92,9 +93,10 @@ const controlEditIngredient = function (id) {
 };
 
 // Removes an ingredient from the data list
-const controlRemoveIngredient = function (id) {
+const controlRemoveIngredient = function (arr) {
   try {
-    model.deleteIngredient(id);
+    const ingredient = model.getUserIngredient(arr);
+    model.deleteIngredient(ingredient);
   } catch (err) {
     ingredientView.renderError(err);
   }
@@ -105,8 +107,10 @@ const controlAddRecipe = async function (newRecipe) {
   try {
     if (!model.checkUserIngredients())
       throw new Error('No ingredients were added.');
+
     // Spinner
     addRecipeView.renderSpinner();
+
     // Upload new recipe data
     await model.uploadRecipe(newRecipe);
 
@@ -121,6 +125,7 @@ const controlAddRecipe = async function (newRecipe) {
 
     // Change ID in URL
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
     // remove success message
     setTimeout(function () {
       addRecipeView._reinstate();
@@ -134,7 +139,31 @@ const controlAddRecipe = async function (newRecipe) {
   }
 };
 
-const controlDeleteRecipe = async function (hash) {
+const controlEditRecipe = function () {
+  // Clear Form
+  addRecipeView._reinstate();
+
+  // clear userIngredients
+  model.state.userIngredients = [];
+
+  // Toggles recipe window
+  addRecipeView.toggleWindow();
+
+  // For each ingedient in the model state, print to UI
+  ingredientView._renderIngredient(
+    ingredientView._generateMarkup(model.state.recipe.ingredients)
+  );
+
+  // push model ings to userIngredients arr
+  model.state.recipe.ingredients.forEach(ingredient => {
+    model.state.userIngredients.push(ingredient);
+  });
+
+  // Delete current recipe from model, api and bookmarks w/ hash (is not deleted from UI, didnt want to do any cancel functionality if close form w/o submit)
+  controlDeleteRecipe(window.location.hash.substring(1), true);
+};
+
+const controlDeleteRecipe = async function (hash, edit = null) {
   // deletes recipe from API
   await model.deleteRecipe(hash);
   // Removes bookmark from Array
@@ -144,8 +173,11 @@ const controlDeleteRecipe = async function (hash) {
   controlBookmarks();
   // Changes URL Hash
   window.history.pushState(null, '', ' ');
-  // Renders success message to UI
-  deleteRecipeView.generateMarkup();
+
+  if (!edit) {
+    // Renders success message to UI
+    deleteRecipeView.generateMarkup();
+  }
 };
 
 const controlRecipes = async function () {
@@ -170,13 +202,11 @@ const controlRecipes = async function () {
     // Rendering recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
-    console.error(err);
     recipeView.renderError(err.message);
   }
 };
 
 (() => {
-  console.log(model.state);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlBookmark);
@@ -187,6 +217,7 @@ const controlRecipes = async function () {
   paginationView.addHandlerClick(controlPagination);
 
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  editRecipeView.addHandlerEdit(controlEditRecipe);
   deleteRecipeView.addHandlerDelete(controlDeleteRecipe);
 
   ingredientView.addHandlerCreateIngredient(controlAddIngredient);

@@ -41,9 +41,20 @@ class IngredientView extends View {
         this._parentElement.addEventListener('click', async function (e) {
           if (!e.target.classList.contains('btn__edit')) return;
 
-          await handler(
-            e.target.parentNode.children[0].getAttribute('dataset')
-          );
+          const nodeList = document.querySelectorAll('.user--ingredient');
+          nodeList.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              node.childNodes.forEach(element => {
+                if (
+                  element.nodeType === element.ELEMENT_NODE &&
+                  e.target.previousElementSibling === element
+                ) {
+                  console.log(Array.from(element.textContent.split(' ')));
+                  handler(Array.from(element.textContent.split(' ')));
+                }
+              });
+            }
+          });
           e.target.parentNode.remove();
         });
       }
@@ -56,6 +67,23 @@ class IngredientView extends View {
       throw err;
     }
   }
+
+  addHandlerRemoveIngredient(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      if (!e.target.classList.contains('btn__remove')) return;
+      const nodeList = document.querySelectorAll('.user--ingredient');
+      nodeList.forEach(node => {
+        node.childNodes.forEach(element => {
+          if (element.nodeType === element.ELEMENT_NODE) {
+            if (!element.classList.contains('user--ingredient-created')) return;
+            handler(Array.from(element.textContent.split(' ')));
+          }
+        });
+      });
+      e.target.parentNode.remove();
+    });
+  }
+
   renderError(err, data = null) {
     if (data) {
       const nodeList = document.getElementsByName(`${data[0]}`);
@@ -85,13 +113,6 @@ class IngredientView extends View {
     }, MODAL_CLOSE_SEC * 1000);
   }
 
-  addHandlerRemoveIngredient(handler) {
-    this._parentElement.addEventListener('click', function (e) {
-      if (!e.target.classList.contains('btn__remove')) return;
-      e.target.parentNode.remove();
-      handler(e.target.parentNode.children[0].getAttribute('dataset'));
-    });
-  }
   toggleUploadWindows(e, error = null) {
     const hideRecipeData = () => {
       this._recipeDataContainer.classList.add('fullHide');
@@ -115,7 +136,7 @@ class IngredientView extends View {
       .map(
         ingredient => `
           <div class="user--ingredient">
-          <label dataset="${ingredient.id}">${ingredient.quantity} ${ingredient.unit} ${ingredient.description}</label>
+          <label class="user--ingredient-created">${ingredient.quantity} ${ingredient.unit} ${ingredient.description}</label>
           <button type="button" class="btn__ingredient btn__edit">Edit</button>
           <button type="button" class="btn__ingredient btn__remove">Remove</button>
           </div>
