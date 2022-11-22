@@ -9,6 +9,7 @@ import { AJAX } from './helpers.js';
 
 export const state = {
   recipe: {},
+  shoppingList: new Set(),
   userIngredients: [],
   search: {
     query: '',
@@ -115,6 +116,21 @@ export const deleteIngredient = function (ingredient) {
     if (!ingredient === ing) return;
     state.userIngredients.splice(i, 1);
   });
+};
+
+export const getRecipeIngredients = function () {
+  state.recipe.ingredients.forEach(ing => {
+    ing =
+      ing.description.toUpperCase().slice(0, 1) +
+      ing.description.toLowerCase().slice(1);
+    state.shoppingList.add(ing.replace(/[^a-z -]/gi, ''));
+  });
+  return state.shoppingList;
+};
+
+export const removeFromShoppingList = function (string) {
+  state.shoppingList.delete(string);
+  return state.shoppingList;
 };
 
 export const getUserIngredient = function (arr) {

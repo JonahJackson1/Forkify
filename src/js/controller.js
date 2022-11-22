@@ -9,6 +9,7 @@ import deleteRecipeView from './Views/deleteRecipeView.js';
 import ingredientView from './Views/ingredientView.js';
 import editRecipeView from './Views/editRecipeView.js';
 import { MODAL_CLOSE_SEC } from './config.js';
+import shoppingList from './Views/shoppingList.js';
 
 // if (module.hot) {
 //   module.hot.accept();
@@ -205,6 +206,26 @@ const controlRecipes = async function () {
   }
 };
 
+const controlAddToShoppingList = function () {
+  const ingredients = model.getRecipeIngredients();
+  if (!ingredients) return;
+  // clear ingredients from list
+  shoppingList._reinstate();
+  // render ingredients to list
+  shoppingList.render(ingredients);
+};
+
+const controlRemoveFromShoppingList = function (string) {
+  // remove ingredient
+  const ingredients = model.removeFromShoppingList(string);
+
+  // clear ingredients from list
+  shoppingList._reinstate();
+
+  // render ingredients to list
+  shoppingList.render(ingredients);
+};
+
 (() => {
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
@@ -222,4 +243,7 @@ const controlRecipes = async function () {
   ingredientView.addHandlerCreateIngredient(controlAddIngredient);
   ingredientView.addHandlerEditIngredient(controlEditIngredient);
   ingredientView.addHandlerRemoveIngredient(controlRemoveIngredient);
+
+  shoppingList.addHandlerAddToShoppingList(controlAddToShoppingList);
+  shoppingList.addHandlerRemoveFromShoppingList(controlRemoveFromShoppingList);
 })();

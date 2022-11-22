@@ -62,6 +62,16 @@ export default class View {
           // if node is the ingredient list hide
           node.classList.add('fullHide');
         }
+        // if ingredients in modal, clear ingredients
+        if (node.classList.contains('modal-content')) {
+          node?.childNodes.forEach(node => {
+            if (
+              node.nodeType === Node.ELEMENT_NODE &&
+              node.classList.contains('shopping--list')
+            )
+              node.remove();
+          });
+        }
       }
     });
   }

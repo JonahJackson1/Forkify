@@ -1,6 +1,5 @@
 import View from './view.js';
 import icons from 'url:../../img/icons.svg';
-import { MODAL_CLOSE_SEC } from '.././config';
 
 class IngredientView extends View {
   _container = document.querySelector('.upload');
